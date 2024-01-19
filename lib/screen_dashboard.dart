@@ -49,7 +49,7 @@ class _ScreenDashboardState extends State<ScreenDashboard> {
                   itemCount:snapshot.data!.length,
                   itemBuilder: (context,index){
                    return ListTile(
-                   title: Text("${snapshot.data![index].name}"
+                   title: Text("${snapshot.data![index].image}"
                        "${snapshot.data![index].colors}")
                    );
                   });
