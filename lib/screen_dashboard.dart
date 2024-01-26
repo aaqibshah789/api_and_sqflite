@@ -1,4 +1,6 @@
-import 'package:apie_prectice/cats.dart';
+import 'dart:html';
+import 'package:apie_prectice/model_prayer.dart';
+import 'package:apie_prectice/restapi_utils.dart';
 import 'package:apie_prectice/services.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,33 +16,43 @@ class ScreenDashboard extends StatefulWidget {
 
 class _ScreenDashboardState extends State<ScreenDashboard> {
 
-  Future<List<Cats>>? _future;
-
-  @override
+  Future<List<ModelPrayer>>? _future;
   void initState() {
     super.initState();
     LoadData();
+
   }
+
+  @override
+
 
   void LoadData() {
+
     setState(() {
-      _future = Services.GetAllCats();
+      _future = Services.GetAllPrayers();
     });
+    ModelPrayer modelPrayer=ModelPrayer(code: 200, status:"OK",data:[]);
+    modelPrayer.data[DateTime.december].timings.fajr;
   }
 
+
   Widget build(BuildContext context) {
+
+
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(title: Text("${Restapi.ios_version_no}"
+        "${Restapi.version_android}"),
+        ),
         body: Container(
           alignment: Alignment.center,
           child: FutureBuilder(future:_future,
-              builder:(Context, AsyncSnapshot<List<Cats>> snapshot){
+              builder:(Context, AsyncSnapshot<List<ModelPrayer>> snapshot){
             if(snapshot.connectionState== ConnectionState.waiting){
-              return CircularProgressIndicator();
+              return Restapi.ShowLoadingView(context);
             }else
               if(snapshot.hasError){
                 return Center(
-                  child: Text("${snapshot.error.toString()}")
+                  child: Text("${snapshot.error}")
                 );
               }
               else
@@ -49,8 +61,7 @@ class _ScreenDashboardState extends State<ScreenDashboard> {
                   itemCount:snapshot.data!.length,
                   itemBuilder: (context,index){
                    return ListTile(
-                   title: Text("${snapshot.data![index].image}"
-                       "${snapshot.data![index].colors}")
+                   title: Text(snapshot.data![index].data[DateTime.december].timings.fajr)
                    );
                   });
                 }
@@ -66,13 +77,6 @@ class _ScreenDashboardState extends State<ScreenDashboard> {
           )));
   }
 }
-//ListView.builder(
-//itemCount:cats.length,
-//itemBuilder: (context,index){
-//return ListTile(
-//title: Text("${cats[index].name}")
-//);
 
-//}
-//)
+
 
